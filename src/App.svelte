@@ -3,46 +3,87 @@
 
   let name = "Max";
   let title = "";
-  let description = "";
   let image = "";
-  let age = 30;
+  let description = "";
+  let formState = "empty";
+  let createdContacts = [];
 
-  $: uppercaseName = name.toUpperCase();
-
-  $: console.log(name);
-
-  $: if (name === "Maximiline") {
-    console.log("It run");
-    age = 31;
+  function addContact() {
+    if (
+      name.trim().length == 0 ||
+      title.trim().length == 0 ||
+      image.trim().length == 0 ||
+      description.trim().length == 0
+    ) {
+      formState = "invalid";
+      return;
+    }
+    createdContacts = [
+      ...createdContacts,
+      {
+        id: Math.random(),
+        name,
+        title: title,
+        imageUrl: image,
+        desc: description,
+      },
+    ];
+    formState = "done";
   }
 
-  function incrementAge() {
-    age += 1;
+  function deleteFirst() {
+    createdContacts = createdContacts.slice(1);
   }
 
-  function changeName() {
-    name = "Maximiline";
-  }
-
-  function nameInput(event) {
-    const enteredValue = event.target.value;
-    name = enteredValue;
+  function deleteLast() {
+    createdContacts = createdContacts.slice(0, -1);
   }
 </script>
 
-<h1>Hello {uppercaseName}, my age {age}</h1>
-<button on:click={incrementAge}>Add age</button>
-<!-- <button on:click={changeName}>Change name</button> -->
-<!-- <input type="text" value={name} on:input={nameInput} /> -->
-<input type="text" bind:value={name} />
-<input type="text" bind:value={title} />
-<input type="text" bind:value={image} />
-<textarea rows="3" bind:value={description} />
+<div id="form">
+  <div class="form-control">
+    <label for="userName">User Name</label>
+    <input type="text" bind:value={name} id="userName" />
+  </div>
+  <div class="form-control">
+    <label for="jobTitle">Job Title</label>
+    <input type="text" bind:value={title} id="jobTitle" />
+  </div>
+  <div class="form-control">
+    <label for="image">Image URL</label>
+    <input type="text" bind:value={image} id="image" />
+  </div>
+  <div class="form-control">
+    <label for="desc">Description</label>
+    <textarea rows="3" bind:value={description} id="desc" />
+  </div>
+</div>
 
-<ContactCard userName={name} jobTitle={title} {description} userImage={image} />
+<button on:click={addContact}>Add Contact Card</button>
+<button on:click={deleteFirst}>Delete First</button>
+<button on:click={deleteLast}>Delete Last</button>
+
+{#if formState === "invalid"}
+  <p>Invalid Input</p>
+{:else}
+  <p>Please enter some data and hit the button</p>
+{/if}
+
+{#each createdContacts as contact, i (contact.id)}
+  <h2># {i + 1}</h2>
+  <ContactCard
+    userName={contact.name}
+    jobTitle={contact.title}
+    description={contact.desc}
+    userImage={contact.imageUrl}
+  />
+{:else}
+  <p>Plase start adding some contacts, we found none!</p>
+{/each}
 
 <style>
-  h1 {
-    color: purple;
+  #form {
+    width: 30rem;
+    max-width: 100%;
   }
 </style>
