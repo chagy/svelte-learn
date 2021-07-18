@@ -65,7 +65,11 @@
     >Add Contact Card</button
   >
 </form>
-<button on:click={deleteFirst}>Delete First</button>
+<button
+  on:click={(event) => {
+    createdContacts = createdContacts.slice(1);
+  }}>Delete First</button
+>
 <button on:click={deleteLast}>Delete Last</button>
 
 {#if formState === "invalid"}
