@@ -1,122 +1,71 @@
 <script>
-  import Header from "./UI/Header.svelte";
-  import MeetupGrid from "./Meetups/MeetupGrid.svelte";
-  import TextInput from "./UI/TextInput.svelte";
-  import Button from "./UI/Button.svelte";
+  import { tick, afterUpdate } from "svelte";
+  import Product from "./Product.svelte";
+  import Modal from "./Modal.svelte";
 
-  let title = "";
-  let subtitle = "";
-  let address = "";
-  let email = "";
-  let description = "";
-  let imageUrl = "";
-
-  let meetups = [
+  let products = [
     {
-      id: "m1",
-      title: "Coding Bootcamp",
-      subtitle: "Learn to code in 2 hours",
-      description: "In this meetup, webi",
-      imageUrl:
-        "https://images.unsplash.com/photo-1568992688065-536aad8a12f6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80",
-      address: "27th",
-      contactEmail: "code@mail.com",
-    },
-    {
-      id: "m2",
-      title: "Coding Bootcamp2",
-      subtitle: "Learn to code in 2 hours",
-      description: "In this meetup, webi",
-      imageUrl:
-        "https://images.unsplash.com/photo-1568992688065-536aad8a12f6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80",
-      address: "27th",
-      contactEmail: "code@mail.com",
-    },
-    {
-      id: "m3",
-      title: "Coding Bootcamp3",
-      subtitle: "Learn to code in 2 hours",
-      description: "In this meetup, webi",
-      imageUrl:
-        "https://images.unsplash.com/photo-1568992688065-536aad8a12f6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1189&q=80",
-      address: "27th",
-      contactEmail: "code@mail.com",
+      id: "p1",
+      title: "A book",
+      price: 9.99,
     },
   ];
 
-  function addMeetup() {
-    const newMeetup = {
-      id: Math.random().toString(),
-      title: title,
-      subtitle: subtitle,
-      description: description,
-      imageUrl: imageUrl,
-      contactEmail: email,
-      address: address,
-    };
+  let text = "This is some dummy text";
 
-    meetups = [newMeetup, ...meetups];
+  let showModal = false;
+  let closeable = false;
+
+  function addToCart(event) {
+    console.log(event);
+  }
+
+  function deleteProduct(event) {
+    console.log(event);
+  }
+
+  function transform(event) {
+    if (event.which !== 9) {
+      return;
+    }
+    event.preventDefault();
+
+    const selectionStart = event.selectionStart;
+    const selectionEnd = event.selectionEnd;
+    const value = event.target.value;
+
+    text =
+      value.slice(0, selectionStart) +
+      value.slice(selectionStart, selectionEnd).toUpperCase() +
+      value.slice(selectionEnd);
+
+    tick().then(() => {
+      event.target.selectionStart = selectionStart;
+      event.target.selectionEnd = selectionEnd;
+    });
   }
 </script>
 
-<Header />
+{#each products as product}
+  <Product {...product} on:add-to-cart={addToCart} on:delete={deleteProduct} />
+{/each}
 
-<main>
-  <form on:submit|preventDefault={addMeetup}>
-    <TextInput
-      id="title"
-      type="text"
-      label="Title"
-      value={title}
-      on:input={(event) => (title = event.target.value)}
-    />
-    <TextInput
-      id="subtitle"
-      type="text"
-      label="subtitle"
-      value={subtitle}
-      on:input={(event) => (subtitle = event.target.value)}
-    />
-    <TextInput
-      id="address"
-      type="text"
-      label="address"
-      value={address}
-      on:input={(event) => (address = event.target.value)}
-    />
-    <TextInput
-      id="imageUrl"
-      type="text"
-      label="imageUrl"
-      value={imageUrl}
-      on:input={(event) => (imageUrl = event.target.value)}
-    />
-    <TextInput
-      id="email"
-      type="email"
-      label="email"
-      value={email}
-      on:input={(event) => (email = event.target.value)}
-    />
-    <TextInput
-      id="description"
-      controlType="textarea"
-      label="description"
-      value={description}
-      on:input={(event) => (description = event.target.value)}
-    />
-    <Button type="submit" caption="Save" />
-  </form>
-  <MeetupGrid {meetups} />
-</main>
+<button on:click={() => (showModal = true)}>Show Modal</button>
 
-<style>
-  main {
-    margin-top: 5rem;
-  }
-  form {
-    width: 30rem;
-    max-width: 90%;
-    margin: auto;
-  }
-</style>
+{#if showModal}
+  <Modal
+    on:cancel={() => (showModal = false)}
+    on:close={() => (showModal = false)}
+    let:didAgree={closeable}
+  >
+    <h1 slot="header">Hello</h1>
+    <h2>This slot</h2>
+    <button
+      slot="footer"
+      on:click={() => (showModal = false)}
+      disabled={!closeable}>Confirm</button
+    >
+  </Modal>
+{/if}
+
+<textarea rows="5" value={text} on:keydown={transform} />
