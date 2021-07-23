@@ -9,6 +9,8 @@
   // let favColor = "red";
   let favColor = ["red"];
   let singleFavColor = "red";
+  let usernameInput;
+  let someDiv;
 
   $: console.log(val);
   $: console.log(selectedOption);
@@ -19,6 +21,13 @@
 
   function setValue(event) {
     val = event.target.value;
+  }
+
+  function saveData() {
+    // console.log(document.querySelector("#username").value); ใช้ไม่ได้
+    console.log(usernameInput.value);
+    console.log(usernameInput);
+    console.dir(someDiv);
   }
 </script>
 
@@ -57,3 +66,8 @@
   <option value="red">red</option>
   <option value="blue">blue</option>
 </select>
+
+<input type="text" id="username" bind:this={usernameInput} />
+<button on:click={saveData}>Save</button>
+
+<div bind:this={someDiv} />
