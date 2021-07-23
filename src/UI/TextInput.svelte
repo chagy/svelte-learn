@@ -19,7 +19,7 @@
       {rows}
       name={id}
       {id}
-      valuevalue={value}
+      bind:value
       on:input
       on:blur={() => (touched = true)}
     />
@@ -29,7 +29,7 @@
       {type}
       name={id}
       {id}
-      valuevalue={value}
+      {value}
       on:input
       on:blur={() => (touched = true)}
     />
