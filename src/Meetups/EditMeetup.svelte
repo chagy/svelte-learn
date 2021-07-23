@@ -35,7 +35,9 @@
       id="title"
       label="Title"
       type="text"
+      valid={true}
       value={title}
+      validityMessage={}
       on:input={(event) => (title = event.target.value)}
     />
     <TextInput

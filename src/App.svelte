@@ -1,101 +1,86 @@
 <script>
-  import CustomInput from "./CustomInput.svelte";
-  import Toggle from "./Toggle.svelte";
-  import { isValidEmail } from "./validation";
+  import Header from "./UI/Header.svelte";
+  import MeetupGrid from "./Meetups/MeetupGrid.svelte";
+  import EditMeetup from "./Meetups/EditMeetup.svelte";
+  import Button from "./UI/Button.svelte";
 
-  let val = "Max";
-  let price = 0;
-  let selectedOption = 1;
-  let agreed;
-  // let favColor = "red";
-  let favColor = ["red"];
-  let singleFavColor = "red";
-  let usernameInput;
-  let someDiv;
-  let customInput;
-  let enteredEmail = "";
-  let formIsValid = false;
+  let meetups = [
+    {
+      id: "m1",
+      title: "Coding Bootcamp",
+      subtitle: "Learn to code in 2 hours",
+      description:
+        "In this meetup, we will have some experts that teach you how to code!",
+      imageUrl:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Caffe_Nero_coffee_bar%2C_High_St%2C_Sutton%2C_Surrey%2C_Greater_London.JPG/800px-Caffe_Nero_coffee_bar%2C_High_St%2C_Sutton%2C_Surrey%2C_Greater_London.JPG",
+      address: "27th Nerd Road, 32523 New York",
+      contactEmail: "code@test.com",
+      isFavorite: false,
+    },
+    {
+      id: "m2",
+      title: "Swim Together",
+      subtitle: "Let's go for some swimming",
+      description: "We will simply swim some rounds!",
+      imageUrl:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Olympic_swimming_pool_%28Tbilisi%29.jpg/800px-Olympic_swimming_pool_%28Tbilisi%29.jpg",
+      address: "27th Nerd Road, 32523 New York",
+      contactEmail: "swim@test.com",
+      isFavorite: false,
+    },
+  ];
 
-  $: if (isValidEmail(enteredEmail)) {
-    formIsValid = true;
-  } else {
-    formIsValid = false;
+  let editMode = null;
+
+  function addMeetup(event) {
+    const newMeetup = {
+      id: Math.random().toString(),
+      title: event.detail.title,
+      subtitle: event.detail.subtitle,
+      description: event.detail.description,
+      imageUrl: event.detail.imageUrl,
+      contactEmail: event.detail.email,
+      address: event.detail.address,
+    };
+
+    // meetups.push(newMeetup); // DOES NOT WORK!
+    meetups = [newMeetup, ...meetups];
+    editMode = null;
   }
 
-  $: console.log(val);
-  $: console.log(selectedOption);
-  $: console.log(price);
-  $: console.log(agreed);
-  $: console.log(favColor);
-  $: console.log(singleFavColor);
-  $: console.log(customInput);
-
-  function setValue(event) {
-    val = event.target.value;
+  function toggleFavorite(event) {
+    const id = event.detail;
+    const updatedMeetup = { ...meetups.find((m) => m.id === id) };
+    updatedMeetup.isFavorite = !updatedMeetup.isFavorite;
+    const meetupIndex = meetups.findIndex((m) => m.id === id);
+    const updatedMeetups = [...meetups];
+    updatedMeetups[meetupIndex] = updatedMeetup;
+    meetups = updatedMeetups;
   }
 
-  function saveData() {
-    // console.log(document.querySelector("#username").value); ใช้ไม่ได้
-    console.log(usernameInput.value);
-    console.log(usernameInput);
-    console.dir(someDiv);
-    customInput.empty();
+  function cancelEdit() {
+    editMode = null;
   }
 </script>
 
-<!-- <input type="text" value={val} on:input={setValue} /> -->
-<!-- <input type="text" bind:value={val} /> -->
+<Header />
 
-<CustomInput bind:val bind:this={customInput} />
+<main>
+  <div class="meet-control">
+    <Button on:click={() => (editMode = "add")}>New Meetup</Button>
+  </div>
 
-<Toggle bind:chosenOption={selectedOption} />
-
-<input type="number" bind:value={price} />
-
-<label
-  >Agree to terms?
-  <input type="checkbox" bind:checked={agreed} />
-</label>
-
-<h1>Color</h1>
-<label>
-  <input type="checkbox" value="red" name="color" bind:group={favColor} />
-  Red
-</label>
-
-<label>
-  <input type="checkbox" value="green" name="color" bind:group={favColor} />
-  green
-</label>
-
-<label>
-  <input type="checkbox" value="blue" name="color" bind:group={favColor} />
-  blue
-</label>
-
-<select bind:value={singleFavColor}>
-  <option value="green">green</option>
-  <option value="red">red</option>
-  <option value="blue">blue</option>
-</select>
-
-<input type="text" id="username" bind:this={usernameInput} />
-<button on:click={saveData}>Save</button>
-
-<div bind:this={someDiv} />
-
-<hr />
-<form on:submit|preventDefault>
-  <input
-    type="email"
-    bind:value={enteredEmail}
-    class={isValidEmail(enteredEmail) ? "" : "invalid"}
-  />
-  <button type="submit" disabled={!formIsValid}>Save</button>
-</form>
+  {#if editMode === "add"}
+    <EditMeetup on:save={addMeetup} on:cancel={cancelEdit} />
+  {/if}
+  <MeetupGrid {meetups} on:togglefavorite={toggleFavorite} />
+</main>
 
 <style>
-  .invalid {
-    border: 1px solid red;
+  main {
+    margin-top: 5rem;
+  }
+  .meetup-controls {
+    margin: 1rem;
   }
 </style>
