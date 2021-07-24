@@ -8,9 +8,21 @@
   export let id;
 
   let showDescription = false;
+  let description = "Not available";
+  // let fetchedProducts = [];
+
+  // products.subscribe((prods) => {
+  //   fetchedProducts = prods;
+  // });
 
   function displayDescription() {
     showDescription = !showDescription;
+    // description = fetchedProducts.find((p) => p.id === id).description;
+    const unsubscribe = products.subscribe((prods) => {
+      description = prods.find((p) => p.id === id).description;
+    });
+
+    unsubscribe();
   }
 
   function removeFromCart() {
@@ -28,7 +40,7 @@
   </Button>
   <Button on:click={removeFromCart}>Remove from Cart</Button>
   {#if showDescription}
-    <p>Not available :(</p>
+    <p>{description}</p>
   {/if}
 </li>
 
