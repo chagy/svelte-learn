@@ -13,28 +13,11 @@
   let editMode;
 
   function addMeetup(event) {
-    const meetupData = {
-      id: Math.random().toString(),
-      title: event.detail.title,
-      subtitle: event.detail.subtitle,
-      description: event.detail.description,
-      imageUrl: event.detail.imageUrl,
-      contactEmail: event.detail.email,
-      address: event.detail.address,
-    };
-
-    // meetups.push(newMeetup); // DOES NOT WORK!
-    meetups.addMeetup(meetupData);
     editMode = null;
   }
 
   function cancelEdit() {
     editMode = null;
-  }
-
-  function toggleFavorite(event) {
-    const id = event.detail;
-    meetups.toggleFavorite(id);
   }
 </script>
 
@@ -47,7 +30,7 @@
   {#if editMode === "add"}
     <EditMeetup on:save={addMeetup} on:cancel={cancelEdit} />
   {/if}
-  <MeetupGrid meetups={$meetups} on:togglefavorite={toggleFavorite} />
+  <MeetupGrid meetups={$meetups} />
 </main>
 
 <style>

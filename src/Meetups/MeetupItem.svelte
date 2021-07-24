@@ -1,4 +1,5 @@
 <script>
+  import meetups from "./meetups-store";
   import { createEventDispatcher } from "svelte";
   import Button from "../UI/Button.svelte";
   import Badge from "../UI/Badge.svelte";
@@ -12,8 +13,41 @@
   export let email;
   export let isFav;
 
-  const dispatch = createEventDispatcher();
+  function toggleFavorite() {
+    meetups.toggleFavorite(id);
+  }
 </script>
+
+<article>
+  <header>
+    <h1>
+      {title}
+      {#if isFav}
+        <Badge>FAVORITE</Badge>
+      {/if}
+    </h1>
+    <h2>{subtitle}</h2>
+    <p>{address}</p>
+  </header>
+  <div class="image">
+    <img src={imageUrl} alt={title} />
+  </div>
+  <div class="content">
+    <p>{description}</p>
+  </div>
+  <footer>
+    <Button href="mailto:{email}">Contact</Button>
+    <Button
+      mode="outline"
+      color={isFav ? null : "success"}
+      type="button"
+      on:click={toggleFavorite}
+    >
+      {isFav ? "Unfavorite" : "Favorite"}
+    </Button>
+    <Button type="button">Show Details</Button>
+  </footer>
+</article>
 
 <style>
   article {
@@ -72,33 +106,3 @@
     height: 4rem;
   }
 </style>
-
-<article>
-  <header>
-    <h1>
-      {title}
-      {#if isFav}
-        <Badge>FAVORITE</Badge>
-      {/if}
-    </h1>
-    <h2>{subtitle}</h2>
-    <p>{address}</p>
-  </header>
-  <div class="image">
-    <img src={imageUrl} alt={title} />
-  </div>
-  <div class="content">
-    <p>{description}</p>
-  </div>
-  <footer>
-    <Button href="mailto:{email}">Contact</Button>
-    <Button
-      mode="outline"
-      color={isFav ? null : 'success'}
-      type="button"
-      on:click={() => dispatch('togglefavorite', id)}>
-      {isFav ? 'Unfavorite' : 'Favorite'}
-    </Button>
-    <Button type="button">Show Details</Button>
-  </footer>
-</article>
