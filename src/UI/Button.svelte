@@ -1,9 +1,14 @@
 <script>
-  export let mode;
+  export let type = "button";
+  export let href = null;
+  export let mode = null;
+  export let color = null;
+  export let disabled = false;
 </script>
 
 <style>
-  button {
+  button,
+  a {
     font: inherit;
     border: 1px solid #cf0056;
     background: #cf0056;
@@ -20,7 +25,9 @@
   }
 
   button:hover,
-  button:active {
+  button:active,
+  a:hover,
+  a:active {
     background: #e40763;
     border-color: #e40763;
     box-shadow: 1px 1px 8px rgba(77, 51, 51, 0.26);
@@ -34,6 +41,17 @@
     color: #959595;
     box-shadow: none;
     cursor: not-allowed;
+  }
+
+  .success {
+    background: #01a129;
+    border-color: #01a129;
+  }
+
+  .success:hover,
+  .success:active {
+    background: #1ac745;
+    border-color: #1ac745;
   }
 
   .outline {
@@ -54,8 +72,24 @@
     background: transparent;
     color: #ccc;
   }
+
+  .outline.success {
+    border-color: #01a129;
+    color: #01a129;
+  }
+
+  .outline.success:hover,
+  .outline.success:active {
+    background: #c2ffd1;
+  }
 </style>
 
-<button class={mode} type="button" on:click>
-  <slot />
-</button>
+{#if href}
+  <a {href}>
+    <slot />
+  </a>
+{:else}
+  <button class="{mode} {color}" {type} on:click {disabled}>
+    <slot />
+  </button>
+{/if}

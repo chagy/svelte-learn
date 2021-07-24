@@ -1,5 +1,3 @@
-<span><slot /></span>
-
 <style>
   span {
     display: inline-block;
@@ -13,3 +11,7 @@
     font-size: 0.8rem;
   }
 </style>
+
+<span>
+  <slot />
+</span>

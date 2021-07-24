@@ -15,34 +15,6 @@
   const dispatch = createEventDispatcher();
 </script>
 
-<article>
-  <header>
-    <h1>
-      {title}
-      {#if isFav}<Badge>Favorite</Badge>{/if}
-    </h1>
-    <h2>{subtitle}</h2>
-    <p>{address}</p>
-  </header>
-  <div class="image">
-    <img src={imageUrl} alt="" />
-  </div>
-  <div class="content">
-    <p>{description}</p>
-  </div>
-  <footer>
-    <Button href="mailto:{email}">Contact</Button>
-    <Button
-      mode="outline"
-      color={isFav ? null : "success"}
-      type="button"
-      on:click={() => dispatch("togglefavorite", id)}
-      >{isFav ? "Unfavorite" : "Favorite"}</Button
-    >
-    <Button type="button">Show Details</Button>
-  </footer>
-</article>
-
 <style>
   article {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
@@ -95,4 +67,38 @@
   div {
     text-align: right;
   }
+
+  .content {
+    height: 4rem;
+  }
 </style>
+
+<article>
+  <header>
+    <h1>
+      {title}
+      {#if isFav}
+        <Badge>FAVORITE</Badge>
+      {/if}
+    </h1>
+    <h2>{subtitle}</h2>
+    <p>{address}</p>
+  </header>
+  <div class="image">
+    <img src={imageUrl} alt={title} />
+  </div>
+  <div class="content">
+    <p>{description}</p>
+  </div>
+  <footer>
+    <Button href="mailto:{email}">Contact</Button>
+    <Button
+      mode="outline"
+      color={isFav ? null : 'success'}
+      type="button"
+      on:click={() => dispatch('togglefavorite', id)}>
+      {isFav ? 'Unfavorite' : 'Favorite'}
+    </Button>
+    <Button type="button">Show Details</Button>
+  </footer>
+</article>
