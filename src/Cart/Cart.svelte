@@ -2,17 +2,22 @@
   import { onDestroy } from "svelte";
   import cartItems from "./cart-store";
   import CartItem from "./CartItem.svelte";
+  import { timer } from "../timer-store";
+
+  const unsubscribe = timer.subscribe((count) => {
+    console.log("Cart : " + count);
+  });
 
   // let items;
   // const unsubscribe = cartItems.subscribe((its) => {
   //   items = its;
   // });
 
-  // onDestroy(() => {
-  //   if (unsubscribe) {
-  //     unsubscribe();
-  //   }
-  // });
+  onDestroy(() => {
+    if (unsubscribe) {
+      unsubscribe();
+    }
+  });
   // export let items = [
   //   {
   //     id: "p1",
