@@ -1,4 +1,6 @@
 <script>
+  import cartItems from "./cart-store";
+  import { products } from "../Products/products-store";
   import Button from "../UI/Button.svelte";
 
   export let title;
@@ -12,10 +14,23 @@
   }
 
   function removeFromCart() {
-    // ...
-    console.log("Removing...");
+    cartItems.update((items) => {
+      return items.filter((i) => i.id !== id);
+    });
   }
 </script>
+
+<li>
+  <h1>{title}</h1>
+  <h2>{price}</h2>
+  <Button mode="outline" on:click={displayDescription}>
+    {showDescription ? "Hide Description" : "Show Description"}
+  </Button>
+  <Button on:click={removeFromCart}>Remove from Cart</Button>
+  {#if showDescription}
+    <p>Not available :(</p>
+  {/if}
+</li>
 
 <style>
   li {
@@ -37,15 +52,3 @@
     margin-bottom: 1rem;
   }
 </style>
-
-<li>
-  <h1>{title}</h1>
-  <h2>{price}</h2>
-  <Button mode="outline" on:click={displayDescription}>
-    {showDescription ? 'Hide Description' : 'Show Description'}
-  </Button>
-  <Button on:click={removeFromCart}>Remove from Cart</Button>
-  {#if showDescription}
-    <p>Not available :(</p>
-  {/if}
-</li>
