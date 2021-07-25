@@ -1,3 +1,11 @@
+<script>
+  import { slide } from "svelte/transition";
+</script>
+
+<span transition:slide>
+  <slot />
+</span>
+
 <style>
   span {
     display: inline-block;
@@ -11,7 +19,3 @@
     font-size: 0.8rem;
   }
 </style>
-
-<span>
-  <slot />
-</span>

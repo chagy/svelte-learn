@@ -6,25 +6,6 @@
   let selectedButton = 0;
 </script>
 
-<div>
-  <button
-    type="button"
-    class:active={selectedButton === 0}
-    on:click={() => {
-      selectedButton = 0;
-      dispatch("select", 0);
-    }}>All</button
-  >
-  <button
-    type="button"
-    class:active={selectedButton === 1}
-    on:click={() => {
-      selectedButton = 1;
-      dispatch("select", 1);
-    }}>Favorite</button
-  >
-</div>
-
 <style>
   div {
     font-size: 0px;
@@ -59,3 +40,24 @@
     color: white;
   }
 </style>
+
+<div>
+  <button
+    type="button"
+    class:active={selectedButton === 0}
+    on:click={() => {
+      selectedButton = 0;
+      dispatch('select', 0);
+    }}>
+    All
+  </button>
+  <button
+    type="button"
+    class:active={selectedButton === 1}
+    on:click={() => {
+      selectedButton = 1;
+      dispatch('select', 1);
+    }}>
+    Favorites
+  </button>
+</div>
